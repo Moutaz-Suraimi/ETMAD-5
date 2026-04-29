@@ -45,7 +45,7 @@ export function Header() {
             <img
               src={logo}
               alt="إعتماد"
-              className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl object-cover shadow-soft flex-shrink-0"
+              className="h-9 w-9 sm:h-10 sm:w-10 rounded-full object-cover shadow-soft flex-shrink-0"
             />
             <div className="flex flex-col min-w-0 leading-tight">
               <span className="flex items-center gap-1.5">

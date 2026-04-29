@@ -1,14 +1,16 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import logo from "@/assets/logo.jpg";
 import { services } from "@/data/services";
 import { ArrowDown, ShieldCheck, Zap, Award } from "lucide-react";
 
 export function Hero() {
   const reduceMotion = useReducedMotion();
+  const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center pt-28 pb-16 px-4 bg-gradient-soft bg-gradient-hero overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center pt-28 pb-16 px-4 bg-gradient-soft bg-gradient-hero overflow-x-hidden"
     >
       {/* animated grid */}
       <div
@@ -24,17 +26,9 @@ export function Hero() {
         }}
       />
 
-      {/* decorative blobs (static when reduced motion) */}
-      <motion.div
-        animate={reduceMotion ? undefined : { scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/4 -right-32 w-[28rem] h-[28rem] rounded-full bg-[var(--teal)]/25 blur-3xl"
-      />
-      <motion.div
-        animate={reduceMotion ? undefined : { scale: [1.1, 1, 1.1], opacity: [0.6, 0.9, 0.6] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-1/4 -left-32 w-[28rem] h-[28rem] rounded-full bg-[var(--emerald)]/25 blur-3xl"
-      />
+      {/* decorative blobs (static to prevent mobile lag) */}
+      <div className="absolute top-1/4 -right-32 w-[28rem] h-[28rem] rounded-full bg-[var(--teal)]/20 blur-3xl will-change-transform" />
+      <div className="absolute bottom-1/4 -left-32 w-[28rem] h-[28rem] rounded-full bg-[var(--emerald)]/20 blur-3xl will-change-transform" />
 
       <div className="relative container mx-auto max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
@@ -115,14 +109,31 @@ export function Hero() {
           </div>
 
           {/* Graphic Side (Left on Desktop) */}
-          <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
+          <div className="order-1 lg:order-2 flex justify-center lg:justify-end mt-10 lg:mt-0">
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.9, ease: "easeOut" }}
-              className="relative flex justify-center"
+              className="relative flex justify-center w-full"
             >
-              <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-[420px] lg:h-[420px] flex items-center justify-center group hero-orbit-wrapper group-hover-pause">
+              {/* Active Mobile Text */}
+              <div className="absolute -top-16 inset-x-0 flex justify-center lg:hidden z-[60] pointer-events-none">
+                <AnimatePresence mode="wait">
+                  {activeTooltip && (
+                    <motion.div
+                      key={activeTooltip}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="glass px-5 py-2.5 rounded-full shadow-glow text-sm font-extrabold text-gradient-brand text-center whitespace-nowrap border border-primary/20 pointer-events-auto"
+                    >
+                      {services.find(s => s.id === activeTooltip)?.title}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-[420px] lg:h-[420px] flex items-center justify-center group hero-orbit-wrapper group-hover-pause mt-4 lg:mt-0">
                 {/* rotating ring */}
                 <div
                   className={`absolute inset-0 rounded-full border-2 border-dashed border-primary/30 ${reduceMotion ? '' : 'animate-orbit'}`}
@@ -133,25 +144,29 @@ export function Hero() {
 
                 {/* orbiting service icons */}
                 <div
-                  className={`absolute inset-0 ${reduceMotion ? '' : 'animate-orbit'}`}
+                  className={`absolute inset-0 z-20 ${reduceMotion ? '' : 'animate-orbit'}`}
                 >
                   {services.slice(0, 5).map((s, i) => {
                     const angle = (i / 5) * Math.PI * 2;
                     const r = 50; // % from center
                     const x = (50 + Math.cos(angle) * r).toFixed(3);
                     const y = (50 + Math.sin(angle) * r).toFixed(3);
+                    const isTopHalf = Number(y) < 50;
                     return (
                       <div
                         key={s.id}
                         style={{ left: `${x}%`, top: `${y}%` }}
-                        className="absolute -translate-x-1/2 -translate-y-1/2 group/item z-20"
+                        className="absolute -translate-x-1/2 -translate-y-1/2 group/item z-40 hover:z-50"
                       >
                         <div className={`${reduceMotion ? '' : 'animate-counter-orbit'}`}>
                           <div
                             className={`origin-center ${reduceMotion ? '' : 'animate-pulse-slow'}`}
                             style={{ animationDelay: `${i * 0.6}s` }}
                           >
-                            <div className="relative w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-2xl bg-white shadow-glow hover:shadow-[0_0_25px_var(--color-primary)] ring-2 ring-primary/20 flex items-center justify-center p-2 cursor-pointer transition-all duration-300 hover:scale-[1.15] active:scale-95">
+                            <div 
+                              className="relative w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-2xl bg-white shadow-glow hover:shadow-[0_0_25px_var(--color-primary)] ring-2 ring-primary/20 flex items-center justify-center p-2 cursor-pointer transition-all duration-300 hover:scale-[1.15] active:scale-95"
+                              onClick={() => setActiveTooltip(activeTooltip === s.id ? null : s.id)}
+                            >
                               <img
                                 src={s.image}
                                 alt={s.title}
@@ -160,9 +175,9 @@ export function Hero() {
                               />
                               
                               {/* Tooltip */}
-                              <div className="absolute top-full mt-3 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-foreground text-background text-xs font-bold rounded-lg opacity-0 invisible group-hover/item:opacity-100 group-hover/item:visible transition-all duration-300 whitespace-nowrap shadow-soft z-30">
+                              <div className={`absolute ${isTopHalf ? 'bottom-full mb-3' : 'top-full mt-3'} left-1/2 -translate-x-1/2 px-3 py-1.5 bg-foreground text-background text-xs font-bold rounded-lg whitespace-nowrap shadow-soft z-50 transition-all duration-300 ${activeTooltip === s.id ? 'opacity-100 visible' : 'opacity-0 invisible lg:group-hover/item:opacity-100 lg:group-hover/item:visible'}`}>
                                 {s.title}
-                                <div className="absolute -top-1 left-1/2 -translate-x-1/2 border-4 border-transparent border-b-foreground" />
+                                <div className={`absolute ${isTopHalf ? '-bottom-2 border-t-foreground' : '-top-2 border-b-foreground'} left-1/2 -translate-x-1/2 border-4 border-transparent`} />
                               </div>
                             </div>
                           </div>
