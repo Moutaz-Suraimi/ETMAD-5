@@ -3,10 +3,14 @@ import { Star, BadgeCheck, Quote } from "lucide-react";
 import { reviews } from "@/data/services";
 
 import useEmblaCarousel from "embla-carousel-react";
+import AutoScroll from "embla-carousel-auto-scroll";
 
 export function Reviews() {
   // Use Embla Carousel with RTL direction, loop capability, and drag-free continuous scroll
-  const [emblaRef] = useEmblaCarousel({ direction: "rtl", loop: true, dragFree: true });
+  const [emblaRef] = useEmblaCarousel(
+    { direction: "rtl", loop: true, dragFree: true },
+    [AutoScroll({ playOnInit: true, speed: 1.5, stopOnInteraction: false, direction: "backward" })]
+  );
 
   const loop = [...reviews, ...reviews];
 
@@ -41,9 +45,9 @@ export function Reviews() {
             className="overflow-hidden cursor-grab active:cursor-grabbing w-full pb-4" 
             ref={emblaRef}
           >
-            <div className="flex gap-4 sm:gap-5 md:gap-6 touch-pan-y">
+            <div className="flex gap-8 sm:gap-10 md:gap-12 touch-pan-y">
               {loop.map((r, i) => (
-                <div key={i} className="flex-none w-[280px] sm:w-[320px] md:w-[380px]">
+                <div key={i} className="flex-none w-[280px] sm:w-[320px] md:w-[380px] ml-4 sm:ml-6 md:ml-8">
                   <ReviewCard {...r} className="h-full" />
                 </div>
               ))}
