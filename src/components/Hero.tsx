@@ -125,9 +125,11 @@ export function Hero() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="glass px-5 py-2.5 rounded-full shadow-glow text-sm font-extrabold text-gradient-brand text-center whitespace-nowrap border border-primary/20 pointer-events-auto"
+                      className="glass px-5 py-2.5 rounded-full shadow-glow text-sm font-extrabold text-center whitespace-nowrap border border-primary/20 pointer-events-auto"
                     >
-                      {services.find(s => s.id === activeTooltip)?.title}
+                      <span className="text-gradient-brand py-1 block">
+                        {services.find(s => s.id === activeTooltip)?.title}
+                      </span>
                     </motion.div>
                   )}
                 </AnimatePresence>

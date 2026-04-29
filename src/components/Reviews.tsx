@@ -27,8 +27,8 @@ export function Reviews() {
           <span className="inline-block px-4 py-1.5 rounded-full glass text-primary text-sm font-semibold mb-4">
             شهادات حقيقية
           </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-2">
-            <span className="text-gradient-brand">آراء عملائنا</span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-2 leading-relaxed">
+            <span className="text-gradient-brand py-2">آراء عملائنا</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             ثقة عملائنا هي أساس نجاحنا — اقرأ ماذا يقولون عن خدماتنا
