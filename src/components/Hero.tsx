@@ -175,12 +175,7 @@ export function Hero() {
                                 loading="lazy"
                                 className="w-full h-full object-contain pointer-events-none"
                               />
-                              
-                              {/* Tooltip (Desktop Only) */}
-                              <div className={`hidden lg:block absolute ${isTopHalf ? 'bottom-full mb-3' : 'top-full mt-3'} left-1/2 -translate-x-1/2 px-3 py-1.5 bg-foreground text-background text-xs font-bold rounded-lg whitespace-nowrap shadow-soft z-50 transition-all duration-300 opacity-0 invisible group-hover/item:opacity-100 group-hover/item:visible`}>
-                                {s.title}
-                                <div className={`absolute ${isTopHalf ? '-bottom-2 border-t-foreground' : '-top-2 border-b-foreground'} left-1/2 -translate-x-1/2 border-4 border-transparent`} />
-                              </div>
+
                             </div>
                           </div>
                         </div>
