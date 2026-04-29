@@ -77,6 +77,8 @@
 @layer base {
   * {
     border-color: var(--color-border);
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
   }
 
   html {

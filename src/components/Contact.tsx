@@ -38,7 +38,7 @@ export function Contact() {
 
             <div className="space-y-4">
               <ContactItem icon={Phone} label="واتساب" value="‎+966 59 879 5336" />
-              <ContactItem icon={Clock} label="ساعات العمل" value="السبت - الخميس | 8 ص - 10 م" />
+              <ContactItem icon={Clock} label="ساعات العمل" value="طوال الوقت 24/7" />
             </div>
           </div>
         </motion.div>
