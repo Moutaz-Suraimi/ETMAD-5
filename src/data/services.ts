@@ -182,8 +182,8 @@ export const reviews: Review[] = [
 
 export const WHATSAPP_NUMBER = "966598795336";
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
-export const INSTAGRAM_URL = "https://instagram.com";
-export const TIKTOK_URL = "https://tiktok.com";
+export const INSTAGRAM_URL = "https://www.instagram.com/qwa711_?igsh=c2NuYWQ2ZmtybW1x";
+export const TIKTOK_URL = "https://www.tiktok.com/@qwa711_?_r=1&_t=ZS-95yEdJHWy2h";
 
 export type MessageTone = "formal" | "short";
 
