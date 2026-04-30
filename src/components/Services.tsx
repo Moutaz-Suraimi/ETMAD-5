@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { services, type MainService } from "@/data/services";
@@ -7,6 +7,21 @@ import { PopularServices } from "@/components/PopularServices";
 
 export function Services() {
   const [active, setActive] = useState<MainService | null>(null);
+
+  useEffect(() => {
+    const handleOpen = (e: Event) => {
+      const customEvent = e as CustomEvent<string>;
+      const s = services.find((x) => x.id === customEvent.detail);
+      if (s) {
+        setActive(s);
+        setTimeout(() => {
+          document.getElementById("services")?.scrollIntoView({ behavior: "smooth" });
+        }, 50);
+      }
+    };
+    window.addEventListener("openService", handleOpen);
+    return () => window.removeEventListener("openService", handleOpen);
+  }, []);
 
   return (
     <section id="services" className="py-20 sm:py-28 px-4 relative">

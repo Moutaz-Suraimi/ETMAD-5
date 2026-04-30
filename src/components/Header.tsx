@@ -3,6 +3,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, MessageCircle, Search } from "lucide-react";
 import logo from "@/assets/logo.jpg";
 import { services, buildWhatsAppLink, WHATSAPP_URL } from "@/data/services";
+import { WhatsAppConfirm, type ConfirmPayload } from "@/components/WhatsAppConfirm";
+import { useTone, getSkipConfirm, incrementServiceStat } from "@/hooks/use-whatsapp-prefs";
 
 const links = [
   { href: "#home", label: "الرئيسية" },
@@ -18,6 +20,9 @@ export function Header() {
   const [showResults, setShowResults] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
+  const [tone, setTone] = useTone();
+  const [pending, setPending] = useState<ConfirmPayload | null>(null);
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
@@ -31,29 +36,57 @@ export function Header() {
   const searchResults = useMemo(() => {
     if (!query.trim()) return [];
     const q = query.toLowerCase();
-    const matched: { id: string; title: string; mainTitle?: string; link: string }[] = [];
+    const matched: any[] = [];
 
     services.forEach((ms) => {
       if (ms.title.toLowerCase().includes(q) || ms.description.toLowerCase().includes(q)) {
         matched.push({
           id: ms.id,
+          type: "main",
           title: ms.title,
-          link: `#services`,
+          serviceId: ms.id,
         });
       }
       ms.subServices.forEach((sub, i) => {
         if (sub.title.toLowerCase().includes(q) || sub.description.toLowerCase().includes(q)) {
           matched.push({
             id: `${ms.id}-sub-${i}`,
+            type: "sub",
             title: sub.title,
             mainTitle: ms.title,
-            link: buildWhatsAppLink({ mainTitle: ms.title, subTitle: sub.title, subDescription: sub.description, tone: "formal" }),
+            subDescription: sub.description,
+            serviceId: ms.id,
+            link: buildWhatsAppLink({ mainTitle: ms.title, subTitle: sub.title, subDescription: sub.description, tone }),
           });
         }
       });
     });
     return matched.slice(0, 6);
-  }, [query]);
+  }, [query, tone]);
+
+  const handleResultClick = (e: React.MouseEvent, res: any) => {
+    e.preventDefault();
+    setShowResults(false);
+    setOpen(false);
+    setQuery("");
+
+    if (res.type === "main") {
+      window.dispatchEvent(new CustomEvent("openService", { detail: res.serviceId }));
+    } else {
+      const payload: ConfirmPayload = {
+        mainTitle: res.mainTitle,
+        subTitle: res.title,
+        subDescription: res.subDescription,
+        serviceId: res.serviceId,
+      };
+      if (getSkipConfirm()) {
+        incrementServiceStat(payload.serviceId);
+        window.open(res.link, "_blank");
+      } else {
+        setPending(payload);
+      }
+    }
+  };
 
   const ResultsDropdown = () => {
     if (!showResults || !query.trim()) return null;
@@ -64,14 +97,11 @@ export function Header() {
             {searchResults.map((res) => (
               <a
                 key={res.id}
-                href={res.link}
-                target={res.link.startsWith("https") ? "_blank" : undefined}
+                href={res.type === "sub" ? res.link : "#services"}
+                target={res.type === "sub" ? "_blank" : undefined}
                 rel="noopener noreferrer"
-                onClick={() => {
-                  setShowResults(false);
-                  setOpen(false);
-                  setQuery("");
-                }}
+                onMouseDown={(e) => handleResultClick(e, res)}
+                onClick={(e) => e.preventDefault()}
                 className="block px-4 py-3 hover:bg-primary/5 transition-smooth border-b border-border/40 last:border-0"
               >
                 <div className="text-sm font-semibold text-foreground leading-tight">{res.title}</div>
@@ -234,6 +264,17 @@ export function Header() {
           </>
         )}
       </AnimatePresence>
+
+      <WhatsAppConfirm
+        payload={pending}
+        tone={tone}
+        onTone={setTone}
+        onConfirm={(p) => {
+          incrementServiceStat(p.serviceId);
+          setPending(null);
+        }}
+        onClose={() => setPending(null)}
+      />
     </>
   );
 }
