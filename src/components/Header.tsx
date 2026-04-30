@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X, MessageCircle } from "lucide-react";
+import { Menu, X, MessageCircle, Search } from "lucide-react";
 import logo from "@/assets/logo.jpg";
-import { WHATSAPP_URL } from "@/data/services";
+import { services, buildWhatsAppLink, WHATSAPP_URL } from "@/data/services";
 
 const links = [
   { href: "#home", label: "الرئيسية" },
@@ -14,6 +14,81 @@ const links = [
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [showResults, setShowResults] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setShowResults(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const searchResults = useMemo(() => {
+    if (!query.trim()) return [];
+    const q = query.toLowerCase();
+    const matched: { id: string; title: string; mainTitle?: string; link: string }[] = [];
+
+    services.forEach((ms) => {
+      if (ms.title.toLowerCase().includes(q) || ms.description.toLowerCase().includes(q)) {
+        matched.push({
+          id: ms.id,
+          title: ms.title,
+          link: `#services`,
+        });
+      }
+      ms.subServices.forEach((sub, i) => {
+        if (sub.title.toLowerCase().includes(q) || sub.description.toLowerCase().includes(q)) {
+          matched.push({
+            id: `${ms.id}-sub-${i}`,
+            title: sub.title,
+            mainTitle: ms.title,
+            link: buildWhatsAppLink({ mainTitle: ms.title, subTitle: sub.title, subDescription: sub.description, tone: "formal" }),
+          });
+        }
+      });
+    });
+    return matched.slice(0, 6);
+  }, [query]);
+
+  const ResultsDropdown = () => {
+    if (!showResults || !query.trim()) return null;
+    return (
+      <div className="absolute top-full mt-2 w-full lg:w-[150%] right-0 bg-white rounded-xl shadow-glow border border-border/50 overflow-hidden z-50">
+        {searchResults.length > 0 ? (
+          <div className="max-h-64 overflow-y-auto py-2">
+            {searchResults.map((res) => (
+              <a
+                key={res.id}
+                href={res.link}
+                target={res.link.startsWith("https") ? "_blank" : undefined}
+                rel="noopener noreferrer"
+                onClick={() => {
+                  setShowResults(false);
+                  setOpen(false);
+                  setQuery("");
+                }}
+                className="block px-4 py-3 hover:bg-primary/5 transition-smooth border-b border-border/40 last:border-0"
+              >
+                <div className="text-sm font-semibold text-foreground leading-tight">{res.title}</div>
+                {res.mainTitle && (
+                  <div className="text-xs text-[var(--teal)] mt-1.5 font-medium">❖ {res.mainTitle}</div>
+                )}
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div className="px-4 py-6 text-center text-sm text-muted-foreground">
+            لا توجد نتائج لـ "{query}"
+          </div>
+        )}
+      </div>
+    );
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -71,7 +146,23 @@ export function Header() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="hidden lg:flex relative group items-center" ref={searchRef}>
+              <input 
+                type="text" 
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setShowResults(true);
+                }}
+                onFocus={() => setShowResults(true)}
+                placeholder="ابحث عن خدمة..." 
+                className="pl-4 pr-10 py-2 rounded-full border border-border/50 bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-[var(--teal)] transition-all w-48 focus:w-64 text-sm shadow-soft placeholder:text-muted-foreground/70" 
+              />
+              <Search className="absolute right-3 w-4 h-4 text-muted-foreground pointer-events-none" />
+              <ResultsDropdown />
+            </div>
+
             <a
               href={WHATSAPP_URL}
               target="_blank"
@@ -113,6 +204,21 @@ export function Header() {
               className="fixed top-[64px] inset-x-3 z-40 lg:hidden glass rounded-2xl shadow-glow p-3"
             >
               <nav className="flex flex-col">
+                <div className="relative mb-3 px-2">
+                  <input 
+                    type="text" 
+                    value={query}
+                    onChange={(e) => {
+                      setQuery(e.target.value);
+                      setShowResults(true);
+                    }}
+                    onFocus={() => setShowResults(true)}
+                    placeholder="ابحث عن خدمة..." 
+                    className="w-full pl-4 pr-10 py-3 rounded-xl border border-border/50 bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-[var(--teal)] transition-all text-sm shadow-soft placeholder:text-muted-foreground/70" 
+                  />
+                  <Search className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                  <ResultsDropdown />
+                </div>
                 {links.map((l) => (
                   <a
                     key={l.href}

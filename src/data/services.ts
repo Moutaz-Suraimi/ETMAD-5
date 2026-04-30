@@ -48,7 +48,7 @@ export const services: MainService[] = [
   },
   {
     id: "commerce",
-    title: "المركز السعودي للأعمال ووزارة التجارة",
+    title: "المركز السعودي للأعمال (وزارة التجارة)",
     description: "كافة خدمات السجلات التجارية والأسماء التجارية",
     icon: Store,
     image: commerceImg,
@@ -182,6 +182,8 @@ export const reviews: Review[] = [
 
 export const WHATSAPP_NUMBER = "966598795336";
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
+export const INSTAGRAM_URL = "https://instagram.com";
+export const TIKTOK_URL = "https://tiktok.com";
 
 export type MessageTone = "formal" | "short";
 
