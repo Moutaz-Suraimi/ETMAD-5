@@ -1,8 +1,8 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X, MessageCircle, Search } from "lucide-react";
+import { Menu, X, MessageCircle, Search, Mail } from "lucide-react";
 import logo from "@/assets/logo.jpg";
-import { services, buildWhatsAppLink, WHATSAPP_URL } from "@/data/services";
+import { services, buildWhatsAppLink, WHATSAPP_URL, EMAIL_URL } from "@/data/services";
 import { WhatsAppConfirm, type ConfirmPayload } from "@/components/WhatsAppConfirm";
 import { useTone, getSkipConfirm, incrementServiceStat } from "@/hooks/use-whatsapp-prefs";
 
@@ -34,9 +34,35 @@ export function Header() {
   }, []);
 
   const searchResults = useMemo(() => {
-    if (!query.trim()) return [];
-    const q = query.toLowerCase();
+    const q = query.trim().toLowerCase();
     const matched: any[] = [];
+
+    if (!q) {
+      const popularTitles = [
+        "إصدار تأشيرات عمل",
+        "تخفيض المقابل المالي",
+        "إصدار سجل تجاري لمؤسسة فردية",
+        "نقل معلومات جواز",
+        "إصدار رخصة بلدي",
+        "الاشتراك في منصة مدد"
+      ];
+      services.forEach((ms) => {
+        ms.subServices.forEach((sub, i) => {
+          if (popularTitles.includes(sub.title)) {
+            matched.push({
+              id: `${ms.id}-sub-${i}`,
+              type: "sub",
+              title: sub.title,
+              mainTitle: ms.title,
+              subDescription: sub.description,
+              serviceId: ms.id,
+              link: buildWhatsAppLink({ mainTitle: ms.title, subTitle: sub.title, subDescription: sub.description, tone }),
+            });
+          }
+        });
+      });
+      return matched.slice(0, 6);
+    }
 
     services.forEach((ms) => {
       if (ms.title.toLowerCase().includes(q) || ms.description.toLowerCase().includes(q)) {
@@ -89,11 +115,18 @@ export function Header() {
   };
 
   const ResultsDropdown = () => {
-    if (!showResults || !query.trim()) return null;
+    if (!showResults) return null;
+    const isSearchEmpty = !query.trim();
+
     return (
       <div className="absolute top-full mt-2 w-full lg:w-[150%] right-0 bg-white rounded-xl shadow-glow border border-border/50 overflow-hidden z-50">
         {searchResults.length > 0 ? (
           <div className="max-h-64 overflow-y-auto py-2">
+            {isSearchEmpty && (
+              <div className="px-4 pb-2 pt-1 text-sm font-bold text-muted-foreground/80 flex items-center gap-2">
+                🌟 الخدمات الأكثر طلبا
+              </div>
+            )}
             {searchResults.map((res) => (
               <a
                 key={res.id}
@@ -192,6 +225,15 @@ export function Header() {
               <Search className="absolute right-3 w-4 h-4 text-muted-foreground pointer-events-none" />
               <ResultsDropdown />
             </div>
+
+            <a
+              href={EMAIL_URL}
+              title="تواصل عبر البريد الإلكتروني"
+              className="inline-flex items-center gap-2 rounded-full bg-slate-100 text-slate-800 hover:text-white hover:bg-slate-800 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold shadow-soft hover:scale-105 transition-smooth"
+            >
+              <Mail className="w-4 h-4" />
+              <span className="hidden sm:inline">إيميل</span>
+            </a>
 
             <a
               href={WHATSAPP_URL}
