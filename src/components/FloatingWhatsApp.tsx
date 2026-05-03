@@ -1,4 +1,4 @@
-import { DEFAULT_WHATSAPP_LINK } from "@/data/services";
+import { FLOATING_WHATSAPP_LINK } from "@/data/services";
 import { motion, useReducedMotion } from "framer-motion";
 
 function WhatsappIcon({ className }: { className?: string }) {
@@ -19,7 +19,7 @@ export function FloatingWhatsApp() {
 
   return (
     <motion.a
-      href={DEFAULT_WHATSAPP_LINK}
+      href={FLOATING_WHATSAPP_LINK}
       target="_blank"
       rel="noopener noreferrer"
       initial={{ scale: 0, opacity: 0 }}

@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { buildWhatsAppLink } from "@/data/services";
 
-const popular = [
+export const popularServicesList = [
   { title: "سكليف أعذار طبية", icon: Stethoscope },
   { title: "فحوصات طبية معتمدة", icon: HeartPulse },
   { title: "إقامة + جوازات + هنقر ستيشن + رخصة القيادة", icon: IdCard },
@@ -41,7 +41,7 @@ export function PopularServices() {
       </motion.div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-        {popular.map((item, i) => {
+        {popularServicesList.map((item, i) => {
           const Icon = item.icon;
           const href = buildWhatsAppLink({ mainTitle: item.title });
           return (

@@ -182,7 +182,9 @@ export const reviews: Review[] = [
 
 export const WHATSAPP_NUMBER = "966598795336";
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
-export const DEFAULT_WHATSAPP_LINK = `${WHATSAPP_URL}?text=${encodeURIComponent("السلام عليكم ورحمة الله وبركاته 👋\n\nأرغب بالتواصل معكم والاستفسار عن خدماتكم.")}`;
+export const NAV_WHATSAPP_LINK = `${WHATSAPP_URL}?text=${encodeURIComponent("السلام عليكم، من خلال موقع إعتماد، أرغب بالاستفسار عن خدماتكم.")}`;
+export const FOOTER_WHATSAPP_LINK = `${WHATSAPP_URL}?text=${encodeURIComponent("السلام عليكم، أرغب بالتواصل والحصول على مزيد من التفاصيل حول خدمات التعقيب.")}`;
+export const FLOATING_WHATSAPP_LINK = `${WHATSAPP_URL}?text=${encodeURIComponent("السلام عليكم ورحمة الله وبركاته 👋\nأحتاج إلى المساعدة أو الاستفسار بخصوص خدمات إعتماد.")}`;
 export const INSTAGRAM_URL = "https://www.instagram.com/qwa711_?igsh=c2NuYWQ2ZmtybW1x";
 export const TIKTOK_URL = "https://www.tiktok.com/@qwa711_?_r=1&_t=ZS-95yEdJHWy2h";
 export const EMAIL_URL = "mailto:ettmadcompany@gmail.com";

@@ -2,7 +2,8 @@ import { useEffect, useState, useMemo, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, MessageCircle, Search, Mail } from "lucide-react";
 import logo from "@/assets/logo.jpg";
-import { services, buildWhatsAppLink, DEFAULT_WHATSAPP_LINK, EMAIL_URL } from "@/data/services";
+import { services, buildWhatsAppLink, NAV_WHATSAPP_LINK, EMAIL_URL } from "@/data/services";
+import { popularServicesList } from "@/components/PopularServices";
 import { WhatsAppConfirm, type ConfirmPayload } from "@/components/WhatsAppConfirm";
 import { useTone, getSkipConfirm, incrementServiceStat } from "@/hooks/use-whatsapp-prefs";
 
@@ -54,6 +55,20 @@ export function Header() {
         link: "#popular-services",
       });
     }
+
+    popularServicesList.forEach((item, i) => {
+      if (item.title.toLowerCase().includes(q)) {
+        matched.push({
+          id: `popular-${i}`,
+          type: "sub",
+          title: item.title,
+          mainTitle: "الخدمات الأكثر طلباً",
+          subDescription: "الضغط للذهاب مباشرة إلى الواتساب",
+          serviceId: "popular-services",
+          link: buildWhatsAppLink({ mainTitle: item.title, tone }),
+        });
+      }
+    });
 
     services.forEach((ms) => {
       if (ms.title.toLowerCase().includes(q) || ms.description.toLowerCase().includes(q)) {
@@ -223,7 +238,7 @@ export function Header() {
             </a>
 
             <a
-              href={DEFAULT_WHATSAPP_LINK}
+              href={NAV_WHATSAPP_LINK}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full bg-[var(--whatsapp)] text-white px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold shadow-soft hover:scale-105 transition-smooth"
