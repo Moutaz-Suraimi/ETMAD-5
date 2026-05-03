@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { Phone, Clock, Instagram } from "lucide-react";
-import { INSTAGRAM_URL, TIKTOK_URL, WHATSAPP_URL } from "@/data/services";
+import { Phone, Clock, Instagram, Mail } from "lucide-react";
+import { INSTAGRAM_URL, TIKTOK_URL, WHATSAPP_URL, EMAIL_URL } from "@/data/services";
 import logo from "@/assets/logo.jpg";
 
 function WhatsappIcon({ className }: { className?: string }) {
@@ -75,6 +75,15 @@ export function Contact() {
                   >
                     <TiktokIcon className="w-5 h-5" />
                   </a>
+                  <a
+                    href={EMAIL_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-smooth hover:scale-110"
+                    aria-label="Email"
+                  >
+                    <Mail className="w-5 h-5" />
+                  </a>
                 </div>
               </div>
             </div>
@@ -100,6 +109,9 @@ export function Contact() {
             </a>
             <a href={TIKTOK_URL} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-smooth" aria-label="TikTok">
               <TiktokIcon className="w-4 h-4" />
+            </a>
+            <a href={EMAIL_URL} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-smooth" aria-label="Email">
+              <Mail className="w-4 h-4" />
             </a>
           </div>
 

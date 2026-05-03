@@ -34,34 +34,25 @@ export function Header() {
   }, []);
 
   const searchResults = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    if (!query.trim()) return [];
+    const q = query.toLowerCase();
     const matched: any[] = [];
 
-    if (!q) {
-      const popularTitles = [
-        "إصدار تأشيرات عمل",
-        "تخفيض المقابل المالي",
-        "إصدار سجل تجاري لمؤسسة فردية",
-        "نقل معلومات جواز",
-        "إصدار رخصة بلدي",
-        "الاشتراك في منصة مدد"
-      ];
-      services.forEach((ms) => {
-        ms.subServices.forEach((sub, i) => {
-          if (popularTitles.includes(sub.title)) {
-            matched.push({
-              id: `${ms.id}-sub-${i}`,
-              type: "sub",
-              title: sub.title,
-              mainTitle: ms.title,
-              subDescription: sub.description,
-              serviceId: ms.id,
-              link: buildWhatsAppLink({ mainTitle: ms.title, subTitle: sub.title, subDescription: sub.description, tone }),
-            });
-          }
-        });
+    if (
+      "الخدمات الأكثر طلبا".includes(q) ||
+      "الاكثر طلبا".includes(q) ||
+      "الأكثر طلبا".includes(q) ||
+      "اكثر طلب".includes(q) ||
+      "الأكثر طلب".includes(q)
+    ) {
+      matched.push({
+        id: "popular-services-section",
+        type: "section",
+        title: "الخدمات الأكثر طلباً",
+        mainTitle: "قسم الخدمات الشائعة",
+        serviceId: "popular-services",
+        link: "#popular-services",
       });
-      return matched.slice(0, 6);
     }
 
     services.forEach((ms) => {
@@ -98,6 +89,8 @@ export function Header() {
 
     if (res.type === "main") {
       window.dispatchEvent(new CustomEvent("openService", { detail: res.serviceId }));
+    } else if (res.type === "section") {
+      window.location.hash = res.link;
     } else {
       const payload: ConfirmPayload = {
         mainTitle: res.mainTitle,
@@ -115,22 +108,16 @@ export function Header() {
   };
 
   const ResultsDropdown = () => {
-    if (!showResults) return null;
-    const isSearchEmpty = !query.trim();
+    if (!showResults || !query.trim()) return null;
 
     return (
       <div className="absolute top-full mt-2 w-full lg:w-[150%] right-0 bg-white rounded-xl shadow-glow border border-border/50 overflow-hidden z-50">
         {searchResults.length > 0 ? (
-          <div className="max-h-64 overflow-y-auto py-2">
-            {isSearchEmpty && (
-              <div className="px-4 pb-2 pt-1 text-sm font-bold text-muted-foreground/80 flex items-center gap-2">
-                🌟 الخدمات الأكثر طلبا
-              </div>
-            )}
+          <div className="max-h-80 overflow-y-auto py-2">
             {searchResults.map((res) => (
               <a
                 key={res.id}
-                href={res.type === "sub" ? res.link : "#services"}
+                href={res.type === "sub" ? res.link : (res.type === "section" ? res.link : "#services")}
                 target={res.type === "sub" ? "_blank" : undefined}
                 rel="noopener noreferrer"
                 onMouseDown={(e) => handleResultClick(e, res)}

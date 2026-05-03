@@ -23,7 +23,7 @@ const popular = [
 
 export function PopularServices() {
   return (
-    <div className="mb-16">
+    <div id="popular-services" className="mb-16 scroll-mt-24">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
