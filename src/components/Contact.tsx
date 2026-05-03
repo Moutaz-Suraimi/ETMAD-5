@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Phone, Clock, Instagram, Mail } from "lucide-react";
-import { INSTAGRAM_URL, TIKTOK_URL, WHATSAPP_URL, EMAIL_URL } from "@/data/services";
+import { INSTAGRAM_URL, TIKTOK_URL, DEFAULT_WHATSAPP_LINK, EMAIL_URL } from "@/data/services";
 import logo from "@/assets/logo.jpg";
 
 function WhatsappIcon({ className }: { className?: string }) {
@@ -48,7 +48,7 @@ export function Contact() {
               </p>
               <div className="flex flex-col sm:flex-row items-center gap-4">
                 <a
-                  href={WHATSAPP_URL}
+                  href={DEFAULT_WHATSAPP_LINK}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-3 rounded-full bg-white text-primary px-8 py-4 text-lg font-bold shadow-glow hover:scale-105 transition-smooth"

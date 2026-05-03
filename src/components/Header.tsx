@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, MessageCircle, Search, Mail } from "lucide-react";
 import logo from "@/assets/logo.jpg";
-import { services, buildWhatsAppLink, WHATSAPP_URL, EMAIL_URL } from "@/data/services";
+import { services, buildWhatsAppLink, DEFAULT_WHATSAPP_LINK, EMAIL_URL } from "@/data/services";
 import { WhatsAppConfirm, type ConfirmPayload } from "@/components/WhatsAppConfirm";
 import { useTone, getSkipConfirm, incrementServiceStat } from "@/hooks/use-whatsapp-prefs";
 
@@ -223,7 +223,7 @@ export function Header() {
             </a>
 
             <a
-              href={WHATSAPP_URL}
+              href={DEFAULT_WHATSAPP_LINK}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full bg-[var(--whatsapp)] text-white px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold shadow-soft hover:scale-105 transition-smooth"
