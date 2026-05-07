@@ -126,10 +126,9 @@ export function Contact() {
                 rel="noopener noreferrer"
                 className="font-bold text-primary hover:text-[var(--whatsapp)] transition-smooth"
               >
-                شركة Suraimi
+                شركة Suriix
               </a>
-            </span>
-          </div>
+            <          </div>
         </footer>
       </div>
     </section>
