@@ -128,7 +128,8 @@ export function Contact() {
               >
                 شركة Suriix
               </a>
-            <          </div>
+            </span>
+          </div>
         </footer>
       </div>
     </section>
