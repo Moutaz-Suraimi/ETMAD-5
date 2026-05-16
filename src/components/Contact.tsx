@@ -118,17 +118,7 @@ export function Contact() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
             <span>© {new Date().getFullYear()} جميع الحقوق محفوظة.</span>
             <span className="hidden sm:inline opacity-50">•</span>
-            <span>
-              تصميم وتطوير{" "}
-              <a
-                href="https://wa.me/967780930635"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-bold text-primary hover:text-[var(--whatsapp)] transition-smooth"
-              >
-                شركة Suriix
-              </a>
-            </span>
+           
           </div>
         </footer>
       </div>
