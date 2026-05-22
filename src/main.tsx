@@ -11,7 +11,7 @@ const router = getRouter()
 // Toggle this flag to enable/disable maintenance mode
 //const IS_MAINTENANCE_MODE = false; // غيّر هذه القيمة لإيقاف وضع الصيانة
 
-const IS_MAINTENANCE_MODE = true;
+const IS_MAINTENANCE_MODE = false;
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
